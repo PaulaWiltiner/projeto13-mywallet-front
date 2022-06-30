@@ -5,33 +5,60 @@ import { Link } from "react-router-dom";
 import SignUp from "../../data/SignUp";
 import RegisterContext from "../../contexts/RegisterContext";
 import { ThreeDots } from "react-loader-spinner";
-
+import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [swap, setSwap] = useState(false);
+  const [alert, setAlert] = useState(true);
 
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    samepassword: "",
+    samePassword: "",
   });
+
+  async function userRegister() {
+    setSwap(true);
+    const resp = await SignUp(form);
+    if (resp) {
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+        samePassword: "",
+      });
+      setAlert(true);
+      setTimeout(() => setSwap(false), 500);
+      navigate("/login");
+    } else {
+      setAlert(false);
+      setTimeout(() => setSwap(false), 500);
+    }
+  }
 
   return (
     <RegisterContext.Provider
       value={{ form, setForm, swap, setSwap, loading, setLoading }}
     >
       <DivRegister>
-        {swap ? <SignUp /> : null}
-
         <Title>My Wallet</Title>
 
         <FormRegister />
 
-        <Button onClick={() => setSwap(true)} disabled={swap}>
-          {swap ? <Loader /> : "Cadastrar"}
+        <Button onClick={userRegister} disabled={swap}>
+          {swap ? (
+            <ThreeDots color="#ffffff" height={40} width={80} />
+          ) : (
+            "Cadastrar"
+          )}
         </Button>
+        {alert ? null : (
+          <TextAlert>
+            Por favor, verifique as suas informações e tente novamente.
+          </TextAlert>
+        )}
 
         <MyLink to="/">
           <TextLogin>Já tem uma conta? Entre agora!</TextLogin>
@@ -51,13 +78,6 @@ const MyLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Loader = styled(ThreeDots)`
-  text-decoration: none;
-  color: #ffffff;
-  height: 40px;
-  width: 80px;
-`;
-
 const DivRegister = styled.div`
   width: 100%;
   height: 94vh;
@@ -66,17 +86,23 @@ const DivRegister = styled.div`
   align-items: center;
   justify-content: center;
 `;
+const TextAlert = styled.h2`
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+  color: #ffffff;
+`;
 
 const TextLogin = styled.h2`
   font-size: 16px;
   text-align: center;
   font-weight: 700;
+  margin-top: 50px;
   color: #ffffff;
 `;
 const Button = styled.button`
   width: 350px;
   height: 46px;
-  margin-bottom: 60px;
 
   color: #ffffff;
   font-size: 21px;

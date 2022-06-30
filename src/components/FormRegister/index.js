@@ -4,7 +4,6 @@ import RegisterContext from "../../contexts/RegisterContext";
 
 export default function FormRegister() {
   const { form, setForm, swap } = useContext(RegisterContext);
-  console.log(form);
   function handleForm(e) {
     setForm({
       ...form,

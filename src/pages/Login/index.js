@@ -28,7 +28,11 @@ export default function Login() {
         <FormLogin />
 
         <Button onClick={() => setSwap(true)} disabled={swap}>
-          {swap ? <Loader /> : "Entrar"}
+          {swap ? (
+            <ThreeDots color="#ffffff" height={40} width={80} />
+          ) : (
+            "Entrar"
+          )}
         </Button>
 
         <MyLink to="/register">
@@ -47,13 +51,6 @@ const Title = styled.h1`
 
 const MyLink = styled(Link)`
   text-decoration: none;
-`;
-
-const Loader = styled(ThreeDots)`
-  text-decoration: none;
-  color: #ffffff;
-  height: 40px;
-  width: 80px;
 `;
 
 const DivLogin = styled.div`

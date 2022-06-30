@@ -4,7 +4,6 @@ import DashboardRecords from "../../components/DashboardRecords";
 import ListRecords from "../../data/ListRecords";
 import DeleteRecord from "../../data/DeleteRecord";
 import RecordsContext from "../../contexts/RecordsContext";
-import { ThreeDots } from "react-loader-spinner";
 
 export default function Records() {
   const [swap, setSwap] = useState(false);

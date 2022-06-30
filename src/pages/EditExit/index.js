@@ -27,7 +27,11 @@ export default function EditExit() {
         <FormRecords />
 
         <Button onClick={() => setSwap(true)} disabled={swap}>
-          {swap ? <Loader /> : "Atualizar saída"}
+          {swap ? (
+            <ThreeDots color="#ffffff" height={40} width={80} />
+          ) : (
+            "Atualizar saída"
+          )}
         </Button>
       </DivEditExit>
     </RecordsContext.Provider>
@@ -41,13 +45,6 @@ const Title = styled.h1`
   width: 100%;
   display: flex;
   align-items: left;
-`;
-
-const Loader = styled(ThreeDots)`
-  text-decoration: none;
-  color: #ffffff;
-  height: 40px;
-  width: 80px;
 `;
 
 const DivEditExit = styled.div`
