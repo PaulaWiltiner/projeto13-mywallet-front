@@ -30,6 +30,7 @@ export default function DashboardRecords() {
   const { token } = useContext(TokenContext);
   const [listRecords, setListRecords] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [pass, setPass] = useState(false);
   const [colorBalance, setColorBalance] = useState("#03ac00");
 
   async function getItems() {
@@ -57,11 +58,12 @@ export default function DashboardRecords() {
 
   useEffect(() => {
     getItems();
+    setPass(true);
   }, []);
 
   return (
     <DivDashboard>
-      {listRecords.length === 0 ? (
+      {listRecords.length === 0 && pass ? (
         <TextNoRecords>Não há registros de entrada ou saída</TextNoRecords>
       ) : (
         <div>
