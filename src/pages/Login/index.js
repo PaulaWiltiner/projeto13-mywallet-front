@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import FormLogin from "../../components/FormLogin";
 import { Link } from "react-router-dom";
-import SignIn from "../../data/SignIn";
+import signIn from "../../data/signIn.js";
 import LoginContext from "../../contexts/LoginContext";
 import { useContext } from "react";
 import TokenContext from "../../contexts/TokenContext";
@@ -22,7 +22,7 @@ export default function Login() {
 
   async function userLogin() {
     setSwap(true);
-    const resp = await SignIn(form);
+    const resp = await signIn(form);
     if (resp.status) {
       setForm({
         email: "",

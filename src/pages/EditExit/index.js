@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import FormRecords from "../../components/FormRecords";
-import UpdateRecord from "../../data/UpdateRecord";
+import updateRecord from "../../data/updateRecord.js";
 import TypeRecordContext from "../../contexts/TypeRecordContext";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ export default function EditExit() {
 
   async function createEditExit() {
     setSwap(true);
-    const resp = await UpdateRecord(token, "exit", idRecord, form);
+    const resp = await updateRecord(token, "exit", idRecord, form);
 
     if (resp.status) {
       setForm({

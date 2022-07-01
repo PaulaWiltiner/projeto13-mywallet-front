@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import FormRecords from "../../components/FormRecords";
-import CreateRecord from "../../data/CreateRecord";
+import createRecord from "../../data/createRecord.js";
 import TypeRecordContext from "../../contexts/TypeRecordContext";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ export default function NewEntry() {
 
   async function createNewEntry() {
     setSwap(true);
-    const resp = await CreateRecord(token, "entry", form);
+    const resp = await createRecord(token, "entry", form);
     if (resp.status) {
       setForm({
         value: "",

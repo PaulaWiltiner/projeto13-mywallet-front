@@ -1,5 +1,5 @@
 import axios from "axios";
-export default async function UpdateRecord(token, type, idRecord, form) {
+export default async function updateRecord(token, type, idRecord, form) {
   try {
     const config = {
       headers: {

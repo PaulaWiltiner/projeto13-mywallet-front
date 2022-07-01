@@ -1,5 +1,5 @@
 import axios from "axios";
-export default async function OneRecord(token, idRecord) {
+export default async function oneRecord(token, idRecord) {
   try {
     const config = {
       headers: {

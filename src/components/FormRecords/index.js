@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useContext } from "react";
 import TypeRecordContext from "../../contexts/TypeRecordContext";
-import OneRecord from "../../data/OneRecord";
+import oneRecord from "../../data/oneRecord.js";
 import TokenContext from "../../contexts/TokenContext";
 import { useState, useEffect } from "react";
 
@@ -31,7 +31,7 @@ export default function FormRecords() {
   }
 
   async function getEdit() {
-    const { response: resp } = await OneRecord(token, idRecord);
+    const { response: resp } = await oneRecord(token, idRecord);
 
     if (resp.status) {
       setPlaceholder({

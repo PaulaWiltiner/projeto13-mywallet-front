@@ -3,9 +3,10 @@ import DashboardRecords from "../../components/DashboardRecords";
 import { useContext } from "react";
 import TokenContext from "../../contexts/TokenContext";
 import { useNavigate } from "react-router-dom";
+import logout from "../../data/logout";
 
 export default function Records() {
-  const { userName } = useContext(TokenContext);
+  const { userName, token } = useContext(TokenContext);
   const navigate = useNavigate();
 
   return (
@@ -15,8 +16,9 @@ export default function Records() {
           <h1>Olá, {userName}</h1>{" "}
           <ion-icon
             onClick={() => {
-              navigate("/login");
+              navigate("/");
               localStorage.clear();
+              logout(token);
             }}
             name="log-out-outline"
           ></ion-icon>{" "}

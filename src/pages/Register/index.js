@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import FormRegister from "../../components/FormRegister";
 import { Link } from "react-router-dom";
-import SignUp from "../../data/SignUp";
+import signUp from "../../data/signUp.js";
 import RegisterContext from "../../contexts/RegisterContext";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ export default function Register() {
 
   async function userRegister() {
     setSwap(true);
-    const resp = await SignUp(form);
+    const resp = await signUp(form);
     if (resp) {
       setForm({
         name: "",

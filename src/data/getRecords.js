@@ -1,5 +1,5 @@
 import axios from "axios";
-export default async function ListRecords(token) {
+export default async function getRecords(token) {
   try {
     const config = {
       headers: {

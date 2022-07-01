@@ -9,15 +9,21 @@ import NewEntry from "./pages/NewEntry";
 import EditExit from "./pages/EditExit";
 import EditEntry from "./pages/EditEntry";
 import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import TokenContext from "./contexts/TokenContext";
 
 const ProtectedRoute = ({ token }) => {
-  if (token) {
-    return <Records to="/" replace />;
+  if (!token) {
+    return <Navigate to="/" replace />;
   }
 
-  return <Login to="/" replace />;
+  return <Outlet />;
 };
 
 export default function App() {
@@ -37,17 +43,15 @@ export default function App() {
 
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/"
-            element={<ProtectedRoute token={token}></ProtectedRoute>}
-          />
-          <Route path="/records" element={<Records />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/newexit" element={<NewExit />} />
-          <Route path="/newentry" element={<NewEntry />} />
-          <Route path="/editentry/:idRecord" element={<EditEntry />} />
-          <Route path="/editexit/:idRecord" element={<EditExit />} />
+          <Route element={<ProtectedRoute token={token} />}>
+            <Route path="/records" element={<Records />} />
+            <Route path="/newexit" element={<NewExit />} />
+            <Route path="/newentry" element={<NewEntry />} />
+            <Route path="/editentry/:idRecord" element={<EditEntry />} />
+            <Route path="/editexit/:idRecord" element={<EditExit />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </TokenContext.Provider>

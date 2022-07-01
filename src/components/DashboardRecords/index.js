@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { useContext } from "react";
 import { useState } from "react";
 import TokenContext from "../../contexts/TokenContext";
-import ListRecords from "../../data/ListRecords";
-import DeleteRecord from "../../data/DeleteRecord";
+import getRecords from "../../data/getRecords.js";
+import deleteRecord from "../../data/deleteRecord.js";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -34,14 +34,15 @@ export default function DashboardRecords() {
   const [colorBalance, setColorBalance] = useState("#03ac00");
 
   async function getItems() {
-    const { response } = await ListRecords(token);
+    const { response } = await getRecords(token);
     setListRecords(response.data);
   }
 
   async function dellItems(id) {
-    const { response } = await DeleteRecord(token, id);
+    const { response } = await deleteRecord(token, id);
     setListRecords(response.data);
   }
+
   useEffect(() => {
     const listSum = listRecords.map((item) => {
       if (item.type === "exit") {

@@ -1,17 +1,16 @@
 import axios from "axios";
-export default async function CreateRecord(token, typeRecord, form) {
+export default async function deleteRecord(token, idRecord) {
   try {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    await axios.post(
-      `http://localhost:5000/records?typeRecord=${typeRecord}`,
-      form,
+    const response = await axios.delete(
+      `http://localhost:5000/records/${idRecord}`,
       config
     );
-    return { status: true };
+    return { status: true, response };
   } catch {
     return { status: false };
   }
