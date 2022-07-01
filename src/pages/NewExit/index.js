@@ -2,39 +2,77 @@ import styled from "styled-components";
 import { useState } from "react";
 import FormRecords from "../../components/FormRecords";
 import CreateRecord from "../../data/CreateRecord";
-import RecordsContext from "../../contexts/RecordsContext";
+import TypeRecordContext from "../../contexts/TypeRecordContext";
 import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import TokenContext from "../../contexts/TokenContext";
 
 export default function NewExit() {
   const [swap, setSwap] = useState(false);
-
+  const navigate = useNavigate();
+  const { token } = useContext(TokenContext);
   const [loading, setLoading] = useState(false);
-
+  const [alert, setAlert] = useState(true);
   const [form, setForm] = useState({
     value: "",
     description: "",
   });
+  const idRecord = "";
+
+  async function createNewExit() {
+    setSwap(true);
+    const resp = await CreateRecord(token, "exit", form);
+    if (resp.status) {
+      setForm({
+        value: "",
+        description: "",
+      });
+      setAlert(true);
+      setTimeout(() => setSwap(false), 500);
+      navigate("/records");
+    } else {
+      setTimeout(() => {
+        setSwap(false);
+        setAlert(false);
+      }, 500);
+    }
+  }
+
+  const typeRecordCreated = "new";
 
   return (
-    <RecordsContext.Provider
-      value={{ form, setForm, swap, setSwap, loading, setLoading }}
+    <TypeRecordContext.Provider
+      value={{
+        form,
+        setForm,
+        swap,
+        setSwap,
+        loading,
+        setLoading,
+        typeRecordCreated,
+        idRecord,
+      }}
     >
-      <DivNewExit>
-        {swap ? <CreateRecord /> : null}
-
+      <DivNewEntry>
         <Title>Nova saída</Title>
 
         <FormRecords />
 
-        <Button onClick={() => setSwap(true)} disabled={swap}>
+        <Button onClick={createNewExit} disabled={swap}>
           {swap ? (
             <ThreeDots color="#ffffff" height={40} width={80} />
           ) : (
             "Salvar saída"
           )}
         </Button>
-      </DivNewExit>
-    </RecordsContext.Provider>
+        {alert ? null : (
+          <TextAlert>
+            Por favor, verifique as informações e tente novamente.
+          </TextAlert>
+        )}
+      </DivNewEntry>
+    </TypeRecordContext.Provider>
   );
 }
 
@@ -46,8 +84,13 @@ const Title = styled.h1`
   display: flex;
   align-items: left;
 `;
+const TextAlert = styled.h2`
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+`;
 
-const DivNewExit = styled.div`
+const DivNewEntry = styled.div`
   width: 350px;
   height: 94vh;
   display: flex;

@@ -1,23 +1,57 @@
 import styled from "styled-components";
 import { useContext } from "react";
-import RecordsContext from "../../contexts/RecordsContext";
+import TypeRecordContext from "../../contexts/TypeRecordContext";
+import OneRecord from "../../data/OneRecord";
+import TokenContext from "../../contexts/TokenContext";
+import { useState, useEffect } from "react";
 
 export default function FormRecords() {
-  const { form, setForm, swap } = useContext(RecordsContext);
+  const { form, setForm, swap, typeRecordCreated, idRecord } =
+    useContext(TypeRecordContext);
+  const { token } = useContext(TokenContext);
+  const [placeholder, setPlaceholder] = useState({
+    value: "Valor",
+    description: "Descrição",
+  });
+  const [pass, setPass] = useState(true);
 
   function handleForm(e) {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+
+    if (typeRecordCreated === "edit" && pass) {
+      setForm({
+        value: placeholder.value,
+        description: placeholder.description,
+      });
+      setPass(false);
+    }
   }
+
+  async function getEdit() {
+    const { response: resp } = await OneRecord(token, idRecord);
+
+    if (resp.status) {
+      setPlaceholder({
+        value: resp.data.value,
+        description: resp.data.description,
+      });
+    }
+  }
+  useEffect(() => {
+    if (typeRecordCreated === "edit") {
+      getEdit();
+    }
+  }, []);
 
   return (
     <DivForm>
       <DivInput>
         <Input
-          type="number"
-          placeholder="Valor"
+          type="text"
+          placeholder={placeholder.value}
           name="value"
           onChange={handleForm}
           value={form.value}
@@ -27,7 +61,7 @@ export default function FormRecords() {
       </DivInput>
       <DivInput>
         <Input
-          placeholder="Descrição"
+          placeholder={placeholder.description}
           type="text"
           name="description"
           onChange={handleForm}

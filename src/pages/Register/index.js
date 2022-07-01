@@ -30,11 +30,15 @@ export default function Register() {
         samePassword: "",
       });
       setAlert(true);
-      setTimeout(() => setSwap(false), 500);
-      navigate("/login");
+      setTimeout(() => {
+        setSwap(false);
+        navigate("/");
+      }, 500);
     } else {
-      setAlert(false);
-      setTimeout(() => setSwap(false), 500);
+      setTimeout(() => {
+        setSwap(false);
+        setAlert(false);
+      }, 500);
     }
   }
 
@@ -76,6 +80,7 @@ const Title = styled.h1`
 
 const MyLink = styled(Link)`
   text-decoration: none;
+  margin-top: 50px;
 `;
 
 const DivRegister = styled.div`
@@ -89,7 +94,6 @@ const DivRegister = styled.div`
 const TextAlert = styled.h2`
   font-size: 16px;
   text-align: center;
-  margin-top: 20px;
   color: #ffffff;
 `;
 

@@ -2,39 +2,81 @@ import styled from "styled-components";
 import { useState } from "react";
 import FormRecords from "../../components/FormRecords";
 import UpdateRecord from "../../data/UpdateRecord";
-import RecordsContext from "../../contexts/RecordsContext";
+import TypeRecordContext from "../../contexts/TypeRecordContext";
 import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import TokenContext from "../../contexts/TokenContext";
+import { useParams } from "react-router-dom";
 
 export default function EditExit() {
   const [swap, setSwap] = useState(false);
-
+  const navigate = useNavigate();
+  const { idRecord } = useParams();
+  const { token } = useContext(TokenContext);
   const [loading, setLoading] = useState(false);
-
+  const [alert, setAlert] = useState(true);
   const [form, setForm] = useState({
     value: "",
     description: "",
   });
 
-  return (
-    <RecordsContext.Provider
-      value={{ form, setForm, swap, setSwap, loading, setLoading }}
-    >
-      <DivEditExit>
-        {swap ? <UpdateRecord /> : null}
+  async function createEditExit() {
+    setSwap(true);
+    const resp = await UpdateRecord(token, "exit", idRecord, form);
 
-        <Title>Editar Saída</Title>
+    if (resp.status) {
+      setForm({
+        value: "",
+        description: "",
+      });
+      setAlert(true);
+      setTimeout(() => {
+        setSwap(false);
+        navigate("/records");
+      }, 500);
+    } else {
+      setTimeout(() => {
+        setSwap(false);
+        setAlert(false);
+      }, 500);
+    }
+  }
+
+  const typeRecordCreated = "edit";
+
+  return (
+    <TypeRecordContext.Provider
+      value={{
+        form,
+        setForm,
+        swap,
+        setSwap,
+        loading,
+        setLoading,
+        typeRecordCreated,
+        idRecord,
+      }}
+    >
+      <DivNewEntry>
+        <Title>Editar saída</Title>
 
         <FormRecords />
 
-        <Button onClick={() => setSwap(true)} disabled={swap}>
+        <Button onClick={createEditExit} disabled={swap}>
           {swap ? (
             <ThreeDots color="#ffffff" height={40} width={80} />
           ) : (
             "Atualizar saída"
           )}
         </Button>
-      </DivEditExit>
-    </RecordsContext.Provider>
+        {alert ? null : (
+          <TextAlert>
+            Por favor, atualize alguma informação e tente novamente.
+          </TextAlert>
+        )}
+      </DivNewEntry>
+    </TypeRecordContext.Provider>
   );
 }
 
@@ -46,8 +88,13 @@ const Title = styled.h1`
   display: flex;
   align-items: left;
 `;
+const TextAlert = styled.h2`
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+`;
 
-const DivEditExit = styled.div`
+const DivNewEntry = styled.div`
   width: 350px;
   height: 94vh;
   display: flex;

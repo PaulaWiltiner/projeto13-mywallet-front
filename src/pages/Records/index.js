@@ -1,44 +1,40 @@
 import styled from "styled-components";
-import { useState } from "react";
 import DashboardRecords from "../../components/DashboardRecords";
-import ListRecords from "../../data/ListRecords";
-import DeleteRecord from "../../data/DeleteRecord";
-import RecordsContext from "../../contexts/RecordsContext";
+import { useContext } from "react";
+import TokenContext from "../../contexts/TokenContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Records() {
-  const [swap, setSwap] = useState(false);
-
-  const [loading, setLoading] = useState(false);
-
-  const [form, setForm] = useState({
-    value: "",
-    description: "",
-  });
+  const { userName } = useContext(TokenContext);
+  const navigate = useNavigate();
 
   return (
-    <RecordsContext.Provider
-      value={{ form, setForm, swap, setSwap, loading, setLoading }}
-    >
+    <>
       <DivRecords>
-        {swap ? <DeleteRecord /> : null}
-
         <Title>
-          <h1>Olá, Fulano</h1> <ion-icon name="log-out-outline"></ion-icon>{" "}
+          <h1>Olá, {userName}</h1>{" "}
+          <ion-icon
+            onClick={() => {
+              navigate("/login");
+              localStorage.clear();
+            }}
+            name="log-out-outline"
+          ></ion-icon>{" "}
         </Title>
 
         <DashboardRecords />
         <DivButtons>
-          <Button onClick={() => setSwap(true)} disabled={swap}>
+          <Button onClick={() => navigate("/newentry")}>
             <ion-icon name="add-circle-outline"></ion-icon>
             <h2>Nova entrada</h2>
           </Button>
-          <Button onClick={() => setSwap(true)} disabled={swap}>
+          <Button onClick={() => navigate("/newexit")}>
             <ion-icon name="remove-circle-outline"></ion-icon>
             <h2>Nova saída</h2>
           </Button>
         </DivButtons>
       </DivRecords>
-    </RecordsContext.Provider>
+    </>
   );
 }
 

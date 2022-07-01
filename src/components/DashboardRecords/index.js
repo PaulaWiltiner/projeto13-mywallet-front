@@ -1,61 +1,108 @@
 import styled from "styled-components";
 import { useContext } from "react";
-import RecordsContext from "../../contexts/RecordsContext";
+import { useState } from "react";
+import TokenContext from "../../contexts/TokenContext";
+import ListRecords from "../../data/ListRecords";
+import DeleteRecord from "../../data/DeleteRecord";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Item(props) {
+  const navigate = useNavigate();
   return (
-    <ItemText key={props.key}>
+    <ItemText>
       <DivItem>
         <h2>{props.date}</h2>
-        <p>{props.discription}</p>
+        <p onClick={() => navigate(`/edit${props.type}/${props.id}`)}>
+          {props.description}
+        </p>
       </DivItem>
       <ItemValue color={props.color}>{props.value}</ItemValue>
+      <ion-icon
+        onClick={() => props.dell(props.id)}
+        name="close-outline"
+      ></ion-icon>
     </ItemText>
   );
 }
 
-const listItems = [
-  {
-    date: "30/11",
-    discription: "Almoço mãe",
-    value: "500,00",
-    type: "exit",
-  },
-  {
-    date: "30/11",
-    discription: "Almoço mãe",
-    value: "500,00",
-    type: "entry",
-  },
-];
-
 export default function DashboardRecords() {
+  const { token } = useContext(TokenContext);
+  const [listRecords, setListRecords] = useState([]);
+  const [balance, setBalance] = useState(0);
+  const [colorBalance, setColorBalance] = useState("#03ac00");
+
+  async function getItems() {
+    const { response } = await ListRecords(token);
+    setListRecords(response.data);
+  }
+
+  async function dellItems(id) {
+    const { response } = await DeleteRecord(token, id);
+    setListRecords(response.data);
+  }
+  useEffect(() => {
+    const listSum = listRecords.map((item) => {
+      if (item.type === "exit") {
+        return Number(item.value.replace(",", ".")) * -1;
+      }
+      return Number(item.value.replace(",", "."));
+    });
+    const calculation = listSum.reduce((t, n) => n + t, 0);
+    if (calculation < 0) {
+      setColorBalance("#c70000");
+    }
+    setBalance(calculation);
+  }, [listRecords]);
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
   return (
     <DivDashboard>
-      <ItemList>
-        {listItems.map((item, index) => {
-          let color = "#03ac00";
-          if (item.type === "exit") {
-            color = "#c70000";
-          }
-          return (
-            <Item
-              key={index}
-              color={color}
-              date={item.date}
-              discription={item.discription}
-              value={item.value}
-            ></Item>
-          );
-        })}
-      </ItemList>
-      <Balance>
-        <h2>SALDO</h2>
-        <p>2849,96</p>
-      </Balance>
+      {listRecords.length === 0 ? (
+        <TextNoRecords>Não há registros de entrada ou saída</TextNoRecords>
+      ) : (
+        <div>
+          <ItemList>
+            {listRecords.map((item, index) => {
+              let color = "#03ac00";
+              if (item.type === "exit") {
+                color = "#c70000";
+              }
+              return (
+                <Item
+                  key={index}
+                  id={item._id}
+                  type={item.type}
+                  color={color}
+                  date={item.date}
+                  description={item.description}
+                  value={item.value}
+                  dell={dellItems}
+                ></Item>
+              );
+            })}
+          </ItemList>
+          <Balance color={colorBalance}>
+            <h2>SALDO</h2>
+            <p>{balance}</p>
+          </Balance>
+        </div>
+      )}
     </DivDashboard>
   );
 }
+
+const TextNoRecords = styled.h2`
+  width: 180px;
+  font-size: 20px;
+  line-height: 23px;
+  text-align: center;
+
+  color: #868686;
+`;
 
 const DivItem = styled.div`
   display: flex;
@@ -77,12 +124,13 @@ const DivItem = styled.div`
 
 const ItemList = styled.div`
   margin-bottom: 50px;
+  box-sizing: border-box;
   background-color: #ffffff;
   height: 400px;
-  width: 100%;
+  width: 345px;
   overflow-y: scroll;
   text-align: justify;
-  padding: 14px;
+  padding: 16px;
   border-radius: 5px;
 `;
 
@@ -92,7 +140,7 @@ const Balance = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 50px;
-  padding: 14px;
+  padding: 18px;
   position: absolute;
   z-index: 1;
   bottom: 0px;
@@ -108,7 +156,7 @@ const Balance = styled.div`
 
   p {
     font-size: 16px;
-    color: #03ac00;
+    color: ${(props) => props.color};
     margin-left: 10px;
     word-break: break-word;
   }
@@ -117,8 +165,14 @@ const Balance = styled.div`
 const ItemText = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
   margin-bottom: 10px;
+
+  ion-icon {
+    font-size: 18px;
+    margin-left: 10px;
+    color: #c6c6c6;
+  }
 `;
 
 const ItemValue = styled.h2`
@@ -133,5 +187,8 @@ const DivDashboard = styled.div`
   background-color: #ffffff;
   border: 1px solid #d5d5d5;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 `;

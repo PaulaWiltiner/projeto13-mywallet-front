@@ -4,36 +4,69 @@ import FormLogin from "../../components/FormLogin";
 import { Link } from "react-router-dom";
 import SignIn from "../../data/SignIn";
 import LoginContext from "../../contexts/LoginContext";
+import { useContext } from "react";
+import TokenContext from "../../contexts/TokenContext";
 import { ThreeDots } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [swap, setSwap] = useState(false);
-
+  const [alert, setAlert] = useState(true);
   const [loading, setLoading] = useState(false);
-
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const { setToken, setUserName } = useContext(TokenContext);
+  const navigate = useNavigate();
+
+  async function userLogin() {
+    setSwap(true);
+    const resp = await SignIn(form);
+    if (resp.status) {
+      setForm({
+        email: "",
+        password: "",
+      });
+      setAlert(true);
+      const response = resp.response;
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userName", response.data.name);
+      setToken(response.data.token);
+      setUserName(response.data.name);
+      setTimeout(() => {
+        setSwap(false);
+        navigate("/records");
+      }, 500);
+    } else {
+      setTimeout(() => {
+        setSwap(false);
+        setAlert(false);
+      }, 500);
+    }
+  }
 
   return (
     <LoginContext.Provider
       value={{ form, setForm, swap, setSwap, loading, setLoading }}
     >
       <DivLogin>
-        {swap ? <SignIn /> : null}
-
         <Title>My Wallet</Title>
 
         <FormLogin />
 
-        <Button onClick={() => setSwap(true)} disabled={swap}>
+        <Button onClick={userLogin} disabled={swap}>
           {swap ? (
             <ThreeDots color="#ffffff" height={40} width={80} />
           ) : (
             "Entrar"
           )}
         </Button>
+        {alert ? null : (
+          <TextAlert>
+            Por favor, verifique as suas informações e tente novamente.
+          </TextAlert>
+        )}
 
         <MyLink to="/register">
           <TextRegister>Primeira vez? Cadastre-se!</TextRegister>
@@ -51,6 +84,7 @@ const Title = styled.h1`
 
 const MyLink = styled(Link)`
   text-decoration: none;
+  margin-top: 50px;
 `;
 
 const DivLogin = styled.div`
@@ -62,6 +96,13 @@ const DivLogin = styled.div`
   justify-content: center;
 `;
 
+const TextAlert = styled.h2`
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+  color: #ffffff;
+`;
+
 const TextRegister = styled.h2`
   font-size: 16px;
   text-align: center;
@@ -71,7 +112,6 @@ const TextRegister = styled.h2`
 const Button = styled.button`
   width: 350px;
   height: 46px;
-  margin-bottom: 60px;
 
   color: #ffffff;
   font-size: 21px;
