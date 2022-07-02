@@ -36,8 +36,7 @@ export default function DashboardRecords() {
   async function getItems() {
     const { response } = await getRecords(token);
     setListRecords(response.data);
-    setPass(false);
-    if (response.data === 0) {
+    if (response.data.length === 0) {
       setPass(true);
     }
   }
@@ -45,10 +44,6 @@ export default function DashboardRecords() {
   async function dellItems(id) {
     const { response } = await deleteRecord(token, id);
     setListRecords(response.data);
-    setPass(false);
-    if (response.data === 0) {
-      setPass(true);
-    }
   }
 
   useEffect(() => {
