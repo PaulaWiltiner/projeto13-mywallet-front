@@ -7,7 +7,7 @@ export default async function oneRecord(token, idRecord) {
       },
     };
     const response = await axios.get(
-      `http://localhost:5000/records/${idRecord}`,
+      `https://projeto13mywalletback.herokuapp.com/records/${idRecord}`,
       config
     );
     return { status: true, response };

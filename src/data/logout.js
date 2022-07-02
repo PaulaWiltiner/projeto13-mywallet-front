@@ -6,7 +6,10 @@ export default async function logout(token) {
         Authorization: `Bearer ${token}`,
       },
     };
-    await axios.delete(`http://localhost:5000/logout`, config);
+    await axios.delete(
+      `https://projeto13mywalletback.herokuapp.com/logout`,
+      config
+    );
     return { status: true };
   } catch {
     return { status: false };

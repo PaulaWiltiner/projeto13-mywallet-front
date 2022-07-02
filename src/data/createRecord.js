@@ -7,7 +7,7 @@ export default async function createRecord(token, typeRecord, form) {
       },
     };
     await axios.post(
-      `http://localhost:5000/records?typeRecord=${typeRecord}`,
+      `https://projeto13mywalletback.herokuapp.com/records?typeRecord=${typeRecord}`,
       form,
       config
     );

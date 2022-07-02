@@ -7,7 +7,7 @@ export default async function updateRecord(token, type, idRecord, form) {
       },
     };
     const response = await axios.put(
-      `http://localhost:5000/records/${idRecord}?typeRecord=${type}`,
+      `https://projeto13mywalletback.herokuapp.com/records/${idRecord}?typeRecord=${type}`,
       form,
       config
     );

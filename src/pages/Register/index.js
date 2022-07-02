@@ -95,13 +95,13 @@ const TextAlert = styled.h2`
   font-size: 16px;
   text-align: center;
   color: #ffffff;
+  margin-top: 50px;
 `;
 
 const TextLogin = styled.h2`
   font-size: 16px;
   text-align: center;
   font-weight: 700;
-  margin-top: 50px;
   color: #ffffff;
 `;
 const Button = styled.button`

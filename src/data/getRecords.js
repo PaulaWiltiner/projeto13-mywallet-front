@@ -6,7 +6,10 @@ export default async function getRecords(token) {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get("http://localhost:5000/records", config);
+    const response = await axios.get(
+      "https://projeto13mywalletback.herokuapp.com/records",
+      config
+    );
     return { response };
   } catch {}
 }

@@ -7,7 +7,7 @@ export default async function deleteRecord(token, idRecord) {
       },
     };
     const response = await axios.delete(
-      `http://localhost:5000/records/${idRecord}`,
+      `https://projeto13mywalletback.herokuapp.com/records/${idRecord}`,
       config
     );
     return { status: true, response };

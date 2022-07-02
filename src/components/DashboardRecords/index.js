@@ -36,11 +36,19 @@ export default function DashboardRecords() {
   async function getItems() {
     const { response } = await getRecords(token);
     setListRecords(response.data);
+    setPass(false);
+    if (response.data === 0) {
+      setPass(true);
+    }
   }
 
   async function dellItems(id) {
     const { response } = await deleteRecord(token, id);
     setListRecords(response.data);
+    setPass(false);
+    if (response.data === 0) {
+      setPass(true);
+    }
   }
 
   useEffect(() => {
@@ -59,12 +67,11 @@ export default function DashboardRecords() {
 
   useEffect(() => {
     getItems();
-    setPass(true);
   }, []);
 
   return (
     <DivDashboard>
-      {listRecords.length === 0 && pass ? (
+      {pass ? (
         <TextNoRecords>Não há registros de entrada ou saída</TextNoRecords>
       ) : (
         <div>
