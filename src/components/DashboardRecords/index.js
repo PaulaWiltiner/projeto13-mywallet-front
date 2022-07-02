@@ -47,6 +47,11 @@ export default function DashboardRecords() {
   }
 
   useEffect(() => {
+    if (listRecords.length === 0) {
+      setPass(true);
+    } else {
+      setPass(false);
+    }
     const listSum = listRecords.map((item) => {
       if (item.type === "exit") {
         return Number(item.value.replace(",", ".")) * -1;
